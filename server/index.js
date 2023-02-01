@@ -1,10 +1,11 @@
 /*****************************************
 * INDEX.JS: Main Entry Point for Backend *
 ******************************************/
-
+const dotenv = require("dotenv").config();
 const express = require('express');
 const cors = require('cors');
 const multer = require('multer');
+const mongoose = require('mongoose');
 const fileUpload = require('./routes/api/upload');
 const morgan = require('morgan');
 

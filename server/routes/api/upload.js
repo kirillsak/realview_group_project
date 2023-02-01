@@ -5,24 +5,28 @@
 const express = require("express");
 const mongodb = require("mongodb");
 const multer = require("multer");
+const { s3Uploadv2, s3GetFile } = require("./s3service");
 const ERROR_FILE_TYPE = "Only glb files are allowed.";
 const MAX_SIZE = 1024 * 1024 * 10; // MAX SIZE OF 100MB
 
 const router = express.Router();
 
 // Uploading to local disk to a destination and with a given filename
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, '../client/public/models/');
-    },
-    filename: (req, file, cb) => {
-        cb(null, 'item.glb');
-    }
-})
+// const storage = multer.diskStorage({
+//     destination: (req, file, cb) => {
+//         cb(null, '../client/public/models/');
+//     },
+//     filename: (req, file, cb) => {
+//         cb(null, 'item.glb');
+//     }
+// });
+
+//Creating storage for S3
+const storage = multer.memoryStorage();
 
 // Uploaded file validation using multer, incl. logic for local storage, file size, and file type
 const upload = multer({
-    storage: storage,
+    storage,//: storage,
     limits: {
         fileSize: MAX_SIZE
     },
@@ -36,10 +40,17 @@ const upload = multer({
     }
 });
 
-//Single Upload
-router.post('/', upload.single('file'), (req, res) => {
-    res.json({ file: req.file });
+//Single Upload to S3
+router.post('/', upload.single('file'), async (req, res) => {
+    const result = await s3Uploadv2(req.file);
+    res.json({ file: req.file, result });
 });
+
+//Get Uploaded file - doesnt work 
+// router.get('/', async (req, res) => {
+//     const result = await s3GetFile();
+//     res.json({ result });
+// });
 
 //Error Handling (Must Come After POST Request)
 router.use(function (err, req, res, next) {
