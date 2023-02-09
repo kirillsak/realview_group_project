@@ -5,7 +5,8 @@
 const express = require("express");
 const mongodb = require("mongodb");
 const multer = require("multer");
-const { s3Uploadv2, s3GetFile } = require("./s3service");
+const fs = require("fs")
+const { s3Uploadv2, s3GetBucketContents, s3GetFile } = require("./s3service");
 const ERROR_FILE_TYPE = "Only glb files are allowed.";
 const MAX_SIZE = 1024 * 1024 * 10; // MAX SIZE OF 100MB
 
@@ -40,10 +41,34 @@ const upload = multer({
     }
 });
 
+//Write file to local directory
+const writeFileToLocalDirectory = (fileData, filePath) => {
+    fs.writeFile(filePath, fileData, (error) => {
+        if(error){
+            console.error(error);
+        }else{
+            console.log(`File saved to ${filePath}`);
+        }
+    });
+};
+
 //Single Upload to S3
 router.post('/', upload.single('file'), async (req, res) => {
     const result = await s3Uploadv2(req.file);
     res.json({ file: req.file, result });
+});
+
+//Get all list of all files from S3
+router.get('/', async (req, res) => {
+    const bucketData = await s3GetBucketContents();
+    res.json({bucketData});
+});
+
+//Get item.glb from S3 to local directory
+router.get('/item', async (req, res) => {
+    const fileData = await s3GetFile();
+    const filePath = '../client/public/models/';
+    writeFileToLocalDirectory(fileData, filePath);
 });
 
 //Get Uploaded file - doesnt work 
