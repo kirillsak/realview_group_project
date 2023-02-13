@@ -38,6 +38,18 @@ exports.s3GetFile = async() => {
     return await s3.getObject(param).promise();
 };
 
+//Get link to file from S3 Bucket
+// exports.s3GetFileLink = async() => {
+//     const s3 = new S3();
+
+//     const param = {
+//         Bucket: process.env.AWS_BUCKET_NAME,
+//         Key: `models/item.glb`
+//     };
+
+//     return await s3.getSignedUrl(param);
+// };
+
 //Try to Get Files from S3 - Doesnt work
 // exports.s3GetFile = async() => {
 //     const s3 = new S3();
