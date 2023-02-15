@@ -9,6 +9,7 @@ const multer = require("multer");
 // const multerS3 = require('multer-s3');
 const aws = require('aws-sdk');
 const { s3Uploadv2, s3GetBucketContents, s3GetFile, s3GetFileLink } = require("./s3service");
+const User = require('../../models/userModel');
 const ERROR_FILE_TYPE = "Only glb files are allowed.";
 const MAX_SIZE = 1024 * 1024 * 10; // MAX SIZE OF 100MB
 
@@ -95,8 +96,21 @@ const upload = multer({
 
 //POST Single Upload to S3
 router.post('/', upload.single('file'), async (req, res) => {
+    // if(err){
+    //     return res.status(400).json({success: false, message: err.message});
+    // }
+    //Upload the file
     const result = await s3Uploadv2(req.file);
-    res.json({ file: req.file, result });
+
+    //Get the fileLink (Hardcoded now - should be dynamic in future from req.file.location)
+    const filename = 'item';
+    const fileLink = await s3GetFileLink(filename);
+
+    //Await a UserSchema with field objectURL and store fileLink there
+    await User.create({objectUrl: fileLink})
+
+    //Send JSON response to check
+    res.json({ file: req.file, result, fileLink });
 });
 
 //GET list of all uploads from S3
