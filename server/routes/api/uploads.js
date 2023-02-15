@@ -1,12 +1,12 @@
 /**********************************************
-* UPLOAD.JS: Uploads a file to uploads folder *
+* UPLOAD.JS: Uploads a files to Amazon S3     *
 ***********************************************/
 const dotenv = require("dotenv").config();
 const express = require("express");
 const mongodb = require("mongodb");
 const multer = require("multer");
-const fs = require("fs")
-const multerS3 = require('multer-s3');
+// const fs = require("fs")
+// const multerS3 = require('multer-s3');
 const aws = require('aws-sdk');
 const { s3Uploadv2, s3GetBucketContents, s3GetFile, s3GetFileLink } = require("./s3service");
 const ERROR_FILE_TYPE = "Only glb files are allowed.";
@@ -42,17 +42,6 @@ const upload = multer({
         cb(null, true);
     }
 });
-
-//Write file to local directory - Doesnt work yet
-// const writeFileToLocalDirectory = (fileData, filePath) => {
-//     fs.writeFile(filePath, fileData, (error) => {
-//         if(error){
-//             console.error(error);
-//         }else{
-//             console.log(`File saved to ${filePath}`);
-//         }
-//     });
-// };
 
 //Multer S3
 // const s3 = new aws.S3();
@@ -104,7 +93,7 @@ const upload = multer({
 //     //res.send(`Successfully uploaded ${req.file.originalname} to ${result.Location }`)
 // });
 
-//Single Upload to S3 - Old
+//Single Upload to S3
 router.post('/', upload.single('file'), async (req, res) => {
     const result = await s3Uploadv2(req.file);
     res.json({ file: req.file, result });
@@ -117,7 +106,7 @@ router.get('/', async (req, res) => {
 });
 
 //Get item.glb from S3 to local directory
-router.get('/local/item', async (req, res) => {
+router.get('/local', async (req, res) => {
     const fileData = await s3GetFile();
     res.json({fileData});
     // const filePath = '../client/public/models/';
@@ -131,12 +120,6 @@ router.get('/:id', async (req, res) => {
     // const filePath = '../client/public/models/';
     // writeFileToLocalDirectory(fileData, filePath);
 });
-
-//Get Uploaded file - doesnt work 
-// router.get('/', async (req, res) => {
-//     const result = await s3GetFile();
-//     res.json({ result });
-// });
 
 //Error Handling (Must Come After POST Request)
 router.use(function (err, req, res, next) {

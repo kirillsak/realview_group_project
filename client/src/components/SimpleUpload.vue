@@ -69,7 +69,7 @@ export default {
         formData.append('file', this.file);
 
         try {
-            await axios.post('/api/upload', formData);
+            await axios.post('/api/uploads', formData);
             this.message = "File has been uploaded";
             this.file = "";
             this.error = false;

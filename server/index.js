@@ -5,7 +5,7 @@ const dotenv = require("dotenv").config();
 const express = require('express');
 const cors = require('cors');
 const multer = require('multer');
-const fileUpload = require('./routes/api/upload');
+const uploads = require('./routes/api/uploads');
 const morgan = require('morgan');
 
 const app = express();
@@ -25,8 +25,8 @@ app.get('/', (req, res) => {
     res.send('Welcome to the RealView API');
 });
 
-//Single Upload
-app.use('/api/upload', fileUpload);
+//Uploaded Files
+app.use('/api/uploads', uploads);
 
 /**************
 * PORT CONFIG *
