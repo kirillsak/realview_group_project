@@ -82,7 +82,7 @@ export default {
     //Using Axios - Doesnt work
     // async addToScene(){
     //     try{
-    //         await axios.get('/api/upload/item');
+    //         await axios.get('/api/uploads/item');
     //         this.message = "Adding file to scene";
     //         this.error = false;
 
@@ -94,7 +94,7 @@ export default {
     // }
     getItem(){
         const xhr = new XMLHttpRequest();
-        xhr.open('GET', 'http://localhost:5001/api/upload/item', true);
+        xhr.open('GET', 'http://localhost:5001/api/uploads/item', true);
         xhr.responseType = 'document';
 
         xhr.onload = function(){

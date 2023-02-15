@@ -93,19 +93,19 @@ const upload = multer({
 //     //res.send(`Successfully uploaded ${req.file.originalname} to ${result.Location }`)
 // });
 
-//Single Upload to S3
+//POST Single Upload to S3
 router.post('/', upload.single('file'), async (req, res) => {
     const result = await s3Uploadv2(req.file);
     res.json({ file: req.file, result });
 });
 
-//Get all list of all files from S3
+//GET list of all uploads from S3
 router.get('/', async (req, res) => {
     const bucketData = await s3GetBucketContents();
     res.json({bucketData});
 });
 
-//Get item.glb from S3 to local directory
+//GET upload from S3 to local directory
 router.get('/local', async (req, res) => {
     const fileData = await s3GetFile();
     res.json({fileData});
@@ -113,12 +113,10 @@ router.get('/local', async (req, res) => {
     // writeFileToLocalDirectory(fileData, filePath);
 });
 
-//Get item.glb Link from S3
+//GET item.glb Link from S3 by id
 router.get('/:id', async (req, res) => {
     const fileLink = await s3GetFileLink(req.params.id);
     res.json({fileLink});
-    // const filePath = '../client/public/models/';
-    // writeFileToLocalDirectory(fileData, filePath);
 });
 
 //Error Handling (Must Come After POST Request)
