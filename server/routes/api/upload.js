@@ -117,7 +117,7 @@ router.get('/', async (req, res) => {
 });
 
 //Get item.glb from S3 to local directory
-router.get('/item', async (req, res) => {
+router.get('/local/item', async (req, res) => {
     const fileData = await s3GetFile();
     res.json({fileData});
     // const filePath = '../client/public/models/';
@@ -125,8 +125,8 @@ router.get('/item', async (req, res) => {
 });
 
 //Get item.glb Link from S3
-router.get('/itemlink', async (req, res) => {
-    const fileLink = await s3GetFileLink();
+router.get('/:id', async (req, res) => {
+    const fileLink = await s3GetFileLink(req.params.id);
     res.json({fileLink});
     // const filePath = '../client/public/models/';
     // writeFileToLocalDirectory(fileData, filePath);

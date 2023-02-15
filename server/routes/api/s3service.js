@@ -39,12 +39,12 @@ exports.s3GetFile = async() => {
 };
 
 //Get link to file from S3 Bucket
-exports.s3GetFileLink = async() => {
+exports.s3GetFileLink = async(id) => {
     const s3 = new S3();
 
     const param = {
         Bucket: process.env.AWS_BUCKET_NAME,
-        Key: `models/item.glb`
+        Key: `models/${id}.glb`
     };
 
     return await s3.getSignedUrl('getObject', param);
