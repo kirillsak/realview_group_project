@@ -14,9 +14,7 @@ const app = express();
 * MIDDLEWARE *
 ***************/
 //Enable Cross Origin Resource Sharing (CORS) Requests
-app.use(cors({
-    origin: "http://localhost:8080"
-}));
+app.use(cors());
 app.use(morgan('tiny'));
 
 /*********

@@ -13,7 +13,7 @@
 
 module.exports = {
   devServer: {
-    proxy: "http://localhost:5001"
+    proxy: "http://localhost:5001/"
   }
 };
 // BELOW - ORIGINAL CODE THAT IS NOT BEING CURRENTLY USED
